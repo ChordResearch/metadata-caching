@@ -11,7 +11,12 @@ public class AppRunner {
 
     public void run() {
         try {
-            String file = imageService.download("https://sample-videos.com/img/Sample-png-image-100kb.png");
+            String tokenURI = "https://ipfs.io/ipfs/QmWiQE65tmpYzcokCheQmng2DCM33DEhjXcPB6PanwpAZo/10";
+            String image = imageService.getImageFromTokenURI(tokenURI);
+            System.out.println("image : " + image);
+
+            String file = imageService.download(image);
+            System.out.println("downloaded image : " + file);
             imageService.upload(file);
         }catch (Exception e){
             System.out.println("exception while downloading file : " + e.getMessage());

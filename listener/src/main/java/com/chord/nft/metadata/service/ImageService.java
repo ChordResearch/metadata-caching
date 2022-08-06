@@ -7,6 +7,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,8 @@ import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
+import java.util.UUID;
 
 @Component
 public class ImageService {
@@ -64,8 +67,7 @@ public class ImageService {
     public  String download(String fileUrl) throws Exception
     {
         URL url = new URL(fileUrl);
-        String[] urlParts = fileUrl.split("/");
-        String outputFileName = urlParts[urlParts.length-1];
+        String outputFileName = UUID.randomUUID().toString()+".jpg"; //just assign some random file name
         String outputFilePath = "/tmp/";
         try (InputStream in = url.openStream();
              ReadableByteChannel rbc = Channels.newChannel(in);
@@ -76,28 +78,30 @@ public class ImageService {
     }
 
 
-    private static byte[] getObjectFile(String filePath) {
-
-        FileInputStream fileInputStream = null;
-        byte[] bytesArray = null;
-
+    public String getImageFromTokenURI(String tokenURI) throws Exception{
+        InputStream is = new URL(tokenURI).openStream();
+        String image = null;
         try {
-            File file = new File(filePath);
-            bytesArray = new byte[(int) file.length()];
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bytesArray);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JSONObject json = new JSONObject(jsonText);
+            image =  json.getString("image");
+            image = formatIpfsURL(image);
         } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            is.close();
+            return image;
         }
-        return bytesArray;
+    }
+    private  String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
+    private String formatIpfsURL(String url) {
+        return url.replaceAll("ipfs://","https://ipfs.io/ipfs/");
     }
 }
