@@ -10,6 +10,11 @@ public class AppRunner {
     ImageService imageService;
 
     public void run() {
-        imageService.save();
+        try {
+            String file = imageService.download("https://sample-videos.com/img/Sample-png-image-100kb.png");
+            imageService.upload(file);
+        }catch (Exception e){
+            System.out.println("exception while downloading file : " + e.getMessage());
+        }
     }
 }
