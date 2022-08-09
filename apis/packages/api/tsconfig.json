@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "target": "es2016",
+    "strict": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "noEmit": false,
+    "composite": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "baseUrl": "./",
+    "paths": {
+      "@web3-metadata/commons": ["../commons/src"]
+    },
+    "types": ["node","jest"]
+  },
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["node_modules", "**/__tests__/*", "**/__e2e__/*"],
+  "references": [
+    {"path": "../commons"}
+  ]
+}

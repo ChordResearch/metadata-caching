@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "target": "es2016",
+    "strict": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "noEmit": false,
+    "composite": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*", "**/__e2e__/*"]
+}
