@@ -36,16 +36,37 @@ Key components of this indexer architecture include :
 
 
 Steps to run this project : 
-1. Run rabbitmq
-2. Run postgresdb
-3. Create a AWS S3 Bucket
-4. Set environment properties for API service
-5. Set environment properties for Listener
-6. Set environment properties for Metadata consumer
-7. [Run db migration script](./db)
-7. Start API service followed by listener and then meta data consumer
+1. Setup rabbitmq
+2. Setup postgresdb
+3. Setup mongodb
+4. Create a AWS S3 Bucket
+5. Set environment properties for API service
+6. Set environment properties for Listener
+7. Set environment properties for Metadata consumer
+8. [Run db migration script](./db)
+9. Start API service followed by listener and then meta data consumer
 
-Setup : 
+## Setup : 
+### Install RabbitMQ
+> RabbitMQ can be replaced with any MQ later but for a start, in this project RabbitMQ is used.
+
+`
+docker run  -d -it  --rm --name local-rabbitmq -p 5672:5672 -p 15672:15672 -p 8080:8080 -e RABBITMQ_DEFAULT_USER=guest  -e RABBITMQ_DEFAULT_PASS=guest rabbitmq:3.10-management
+`
+
+### Install Postgres DB
+`
+docker run --name postgres-local -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=rootpassword -e POSTGRES_DB:ethseoul-db -d postgres
+`
+
+You can use tools such as DBeaver or PGAdmin to connect and create database `ethseoul-db`
+
+### Install mongodb
+`
+docker run --name my-local-mongo-latest -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=rootpassword -p 27017:27017 -v <path to data folder>:/etc/mongo -d mongo
+`
+
+### Install 
 
 npm install knex -g
 
