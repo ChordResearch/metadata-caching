@@ -28,7 +28,7 @@ public class TransferEvent implements Event{
         nft.setMinterAddress(param.getMintedBy());
         nft.setTokenId(param.getTokenId());
         nft.setTokenURI(param.getTokenURI());
-        nft.setBlockNumber(param.getBlockNumber());
+        nft.setBlockNumber(Long.parseLong(param.getBlockNumber()));
         nft.setTransactionHash(param.getTransactionHash());
         nft.setCreatedAt(blockTimestamp);
         nft.setUpdatedAt(blockTimestamp);

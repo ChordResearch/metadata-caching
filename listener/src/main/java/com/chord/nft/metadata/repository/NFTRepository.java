@@ -10,14 +10,14 @@ public class NFTRepository extends Repository {
     public int save(Connection connection, NFT nft) {
         return getJdbcTemplate(connection).update("insert into nfts(" +
                         "\"tokenAddress\"," +
-                        "\"minterAddress\"" +
-                        "\"tokenId\"" +
-                        "\"tokenURI\"" +
-                        "\"blockNumber\"" +
-                        "\"transactionHash\"" +
-                        "\"createdAt\"" +
+                        "\"minterAddress\"," +
+                        "\"tokenId\"," +
+                        "\"tokenURI\"," +
+                        "\"blockNumber\"," +
+                        "\"transactionHash\"," +
+                        "\"createdAt\"," +
                         "\"updatedAt\"" +
-                        ") values(?,?,?,?,?)",
+                        ") values(?,?,?,?,?,?,?,?)",
                 new Object[]{
                         nft.getTokenAddress(),
                         nft.getMinterAddress(),

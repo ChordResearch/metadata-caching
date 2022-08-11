@@ -43,10 +43,10 @@ public class AppRunner {
         	*/
             conn.setAutoCommit(false);
 
-            while(appRunMode){
+            //while(appRunMode){
                 // add logic to sleep if latest block already indexed.
                 indexerService.indexBlocks(conn);
-            }
+            //}
         } catch (Exception e) {
             System.err.println("Process has encountered exception hence terminating it.");
             e.printStackTrace();

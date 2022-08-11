@@ -19,18 +19,28 @@ public class RabbitMQConsumer {
     @Autowired
     TokenMetadataRepository tokenMetadataRepository;
 
+    private String formatIpfsURL(String url) {
+        return url.replaceAll("ipfs://","https://ipfs.io/ipfs/");
+    }
     @RabbitListener(queues = "${rabbitmq.queue}")
     public void recievedMessage(Token token) {
         try {
             System.out.println("Recieved Message From RabbitMQ: " + token);
-            JSONObject metadata = imageService.getMetadataFromTokenURI(token.getTokenURI());
-            String image = imageService.getImageFromTokenURI(token.getTokenURI());
-            System.out.println("image : " + image);
+            if (token.getTokenURI().startsWith("ipfs://")) {
 
-            String file = imageService.download(image);
-            System.out.println("downloaded image : " + file);
-            String imageCDNPath = imageService.upload(file);
-            System.out.println("image path in CDN " + imageCDNPath);
+            JSONObject metadata = imageService.getMetadataFromTokenURI(formatIpfsURL(token.getTokenURI()));
+            System.out.println("fetching image..");
+            String imageIPFSURL =  metadata.getString("image");
+            String imageCDNPath = "";
+
+            if(imageIPFSURL != null && !imageIPFSURL.isEmpty()){
+                imageIPFSURL = formatIpfsURL(imageIPFSURL);
+                String file = imageService.download(formatIpfsURL(imageIPFSURL));
+                System.out.println("downloaded image : " + file);
+                imageCDNPath = imageService.upload(file);
+                System.out.println("image path in CDN " + imageCDNPath);
+            }
+
             TokenMetadata tokenMetadata = new TokenMetadata();
             tokenMetadata.setTokenId(token.getTokenId());
             tokenMetadata.setAddress(token.getNftContractAddress());
@@ -38,8 +48,9 @@ public class RabbitMQConsumer {
             tokenMetadata.setMetadata(Document.parse(metadata.toString()));
             // saving metadata
             tokenMetadataRepository.saveMetadata(tokenMetadata);
+        }
         }catch (Exception e){
-
+            System.out.println("Exception inside received message : " + e.getMessage() + " ,cause : " + e.getCause());
         }
     }
 }

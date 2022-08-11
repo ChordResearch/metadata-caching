@@ -76,9 +76,11 @@ public class ImageService {
 
 
     public JSONObject getMetadataFromTokenURI(String tokenURI) throws Exception{
-        InputStream is = new URL(tokenURI).openStream();
         JSONObject metadata = new JSONObject();
+        InputStream is = null;
         try {
+            System.out.println("token uri inside getMetadataFromTokenURI : " + tokenURI);
+            is = new URL(tokenURI).openStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             metadata = new JSONObject(jsonText);
@@ -88,20 +90,6 @@ public class ImageService {
         }
     }
 
-    public String getImageFromTokenURI(String tokenURI) throws Exception{
-        InputStream is = new URL(tokenURI).openStream();
-        String image = null;
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            image =  json.getString("image");
-            image = formatIpfsURL(image);
-        } finally {
-            is.close();
-            return image;
-        }
-    }
     private  String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;

@@ -10,6 +10,6 @@ import java.math.BigInteger;
 public class ERC721Helper {
     public static  String getTokenURI(Web3j web3j, String nftContractAddress, String tokenId) throws  Exception{
         Erc721 erc721 = Erc721.load(nftContractAddress,web3j,new ReadonlyTransactionManager(web3j,nftContractAddress),new DefaultGasProvider());
-        return erc721.tokenURI(new BigInteger(tokenId)).send().toString().toLowerCase();
+        return erc721.tokenURI(new BigInteger(tokenId)).send().toString();
     }
 }

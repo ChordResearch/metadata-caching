@@ -11,7 +11,7 @@ public class NFT {
     private String minterAddress;
     private String tokenId;
     private String tokenURI;
-    private String blockNumber;
+    private long blockNumber;
     private String transactionHash;
     private Timestamp createdAt;
     private Timestamp updatedAt;
