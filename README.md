@@ -13,6 +13,13 @@ It is near realtime. Utilized concurrency and it is very much extendable for all
 With some more modification it can also support non-evm chains.
 
 
+## Architecture
+Here is the high level architecture.
+
+
+![Indexer Architecture Diagram](./indexer_architecture_diagram.jpg)
+
+
 Documentation
 
 Setup : 
