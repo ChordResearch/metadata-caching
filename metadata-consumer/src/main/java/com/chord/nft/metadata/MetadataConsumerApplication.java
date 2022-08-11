@@ -9,14 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MetadataConsumerApplication implements CommandLineRunner {
-
-
-    @Autowired
-    ImageService imageService;
-
-    @Autowired
-    TokenMetadataRepository tokenMetadataRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(MetadataConsumerApplication.class, args);
     }

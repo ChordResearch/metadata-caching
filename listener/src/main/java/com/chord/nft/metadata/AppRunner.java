@@ -1,8 +1,6 @@
 package com.chord.nft.metadata;
 
 import com.chord.nft.metadata.message.RabbitMQSender;
-import com.chord.nft.metadata.model.Token;
-import com.chord.nft.metadata.service.ImageService;
 import com.chord.nft.metadata.service.IndexerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +24,6 @@ public class AppRunner {
     @Value("${app.run}")
     private boolean appRunMode;
 
-    @Autowired
-    ImageService imageService;
 
     @Autowired
     IndexerService indexerService;

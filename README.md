@@ -6,6 +6,7 @@ This project is built from scratch to meet all the requirements related to cachi
 
 Slides of this project can be found [here](./EthSeoulSlides.pdf)
 
+Demo video can be found [here](https://www.youtube.com/watch?v=AijALZWOmLk)
 ## Why this project?
 NFT are such an important use case in crypto and metadata gives you all the details about it. Query Metadata from IPFS can add lot of latency to your project hence it helps if there are tools for caching and querying it.
 
