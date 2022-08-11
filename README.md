@@ -1,3 +1,4 @@
+# ETHSeoul Hackathon Project
 # Multi-Chain, High-Performance NFT Metadata caching for all Web3 user cases
 
 ## About Project
@@ -29,11 +30,9 @@ Here is the high level architecture.
 ## Key Components 
 ### 
 Key components of this indexer architecture include : 
-1. Listener
-2. Metadata consumer
-3. API Service
-
-Documentation
+1. [Listener](./listener)
+2. [Metadata consumer](./metadata-consumer)
+3. [API Service](./apis/packages/api)
 
 Setup : 
 
