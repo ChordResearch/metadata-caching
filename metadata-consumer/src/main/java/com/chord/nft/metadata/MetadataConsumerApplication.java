@@ -33,7 +33,7 @@ public class MetadataConsumerApplication  implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		System.out.println("Metadata-consumer started");
 	}
 
 	public void run1(String... args) throws Exception {

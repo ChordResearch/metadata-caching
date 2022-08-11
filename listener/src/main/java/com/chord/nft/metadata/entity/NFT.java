@@ -2,7 +2,6 @@ package com.chord.nft.metadata.entity;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data

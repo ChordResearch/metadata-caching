@@ -2,7 +2,6 @@ package com.chord.nft.metadata.service;
 
 import com.chord.nft.metadata.dto.EventFilter;
 import com.chord.nft.metadata.dto.EventParseResult;
-import com.chord.nft.metadata.entity.Blockhash;
 import com.chord.nft.metadata.entity.Global;
 import com.chord.nft.metadata.event.factory.EventHandlerFactory;
 import org.json.JSONArray;
@@ -16,9 +15,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 public class IndexerService {
@@ -62,7 +59,6 @@ public class IndexerService {
 
         Global global = repositoryService.getGlobalRepository().getCurrentBlock(conn);
         System.out.println("Current block in DB : " + global.getBlock() +
-                " , verified block : " + global.getVerifiedBlock() +
                 " , index status : " + global.isStatus() +
                 " , last updatedAt : " + global.getUpdatedAt()
         );
@@ -148,7 +144,6 @@ public class IndexerService {
 
         Global globalAfterIncrement = repositoryService.getGlobalRepository().getCurrentBlock(conn);
         System.out.println("Current block in DB After increment : " + globalAfterIncrement.getBlock() +
-                " , verified block : " + globalAfterIncrement.getVerifiedBlock() +
                 " , index status : " + globalAfterIncrement.isStatus() +
                 " , updatedAt : " + globalAfterIncrement.getUpdatedAt()
         );
