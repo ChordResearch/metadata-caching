@@ -6,7 +6,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,12 +20,9 @@ import java.util.UUID;
 
 @Component
 public class ImageService {
-
-
     AmazonS3 s3client;
 
     //String bucketName = "ethseoulnft";
-    // String filesToUpload = "/Users/narendra/Downloads/bird1.jpg";
 
     String s3BucketURL = "https://ethseoulnft.s3.ap-southeast-1.amazonaws.com";
 
@@ -54,7 +50,7 @@ public class ImageService {
     }
 
 
-    public void upload(String filesToUpload) {
+    public String upload(String filesToUpload) {
         String[] urlParts = filesToUpload.split("/");
         String outputFileName = urlParts[urlParts.length-1];
         s3client.putObject(
@@ -62,6 +58,7 @@ public class ImageService {
                 "images/"+outputFileName,
                 new File(filesToUpload)
         );
+        return s3BucketURL + "/images/" + outputFileName;
     }
 
     public  String download(String fileUrl) throws Exception
@@ -79,9 +76,11 @@ public class ImageService {
 
 
     public JSONObject getMetadataFromTokenURI(String tokenURI) throws Exception{
-        InputStream is = new URL(tokenURI).openStream();
         JSONObject metadata = new JSONObject();
+        InputStream is = null;
         try {
+            System.out.println("token uri inside getMetadataFromTokenURI : " + tokenURI);
+            is = new URL(tokenURI).openStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             metadata = new JSONObject(jsonText);
@@ -91,20 +90,6 @@ public class ImageService {
         }
     }
 
-    public String getImageFromTokenURI(String tokenURI) throws Exception{
-        InputStream is = new URL(tokenURI).openStream();
-        String image = null;
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            image =  json.getString("image");
-            image = formatIpfsURL(image);
-        } finally {
-            is.close();
-            return image;
-        }
-    }
     private  String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
