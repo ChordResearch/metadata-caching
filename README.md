@@ -86,6 +86,18 @@ Create schema :
 Add seed data :
 `knex seed:run`
 
+## Create S3 Bucket
+You can follow the official documentation by AWS for this [here](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html)
+## Setup and run API Service
+Follow the documentation [here](./apis) for it
+
+## Setup and run Listener
+Follow the documentation [here](./listener) for it
+
+## Setup and run Metadata Consumer
+Follow the documentation [here](./metadata-consumer) for it
+
+
 ### Install 
 
 npm install knex -g
