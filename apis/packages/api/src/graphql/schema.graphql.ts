@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 export const typeDefs = gql`
+  scalar JSONObject
   type InternalError {
     error: String!
   }
@@ -17,20 +19,36 @@ export const typeDefs = gql`
     blockHash: String
     blockNumber: Int
   }
+  
+  type Metadata {
+    metadata: JSONObject
+    tokenId: String
+    address: String
+    assetCDNUrl: String
+  }
+
   type EventLogs {
     data: [EventLog]
   }
+  type Metadatas {
+    data: [Metadata]
+  }
   union EventLogResult = EventLogs | InvalidInputParamError | InternalError
+  union MetadataResult = Metadatas | InvalidInputParamError | InternalError
   input EventFilter {
     address: [String]
     fromBlock: String
     toBlock: String
     topics: [[String]]
   }
+  input MetadataFilter {
+    address: String
+    tokenId: String
+  }
+
   type Query {
     GetEvents(eventFilter: EventFilter): EventLogResult
+    GetMetadata(filter: MetadataFilter): MetadataResult
   }
-  input FavoriteAssetInput {
-    assetAddress: String
-  }
+
 `;
