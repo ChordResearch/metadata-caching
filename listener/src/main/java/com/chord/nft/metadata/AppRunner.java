@@ -60,26 +60,4 @@ public class AppRunner {
         }
     }
 
-    public void run1() {
-        try {
-            /*
-            String tokenURI = "https://ipfs.io/ipfs/QmWiQE65tmpYzcokCheQmng2DCM33DEhjXcPB6PanwpAZo/10";
-            String image = imageService.getImageFromTokenURI(tokenURI);
-            System.out.println("image : " + image);
-
-            String file = imageService.download(image);
-            System.out.println("downloaded image : " + file);
-            imageService.upload(file);
-            */
-
-            Token token = new Token();
-            token.setTokenId("testtokenid");
-            token.setNftContractAddress("testnftcontractaddress");
-            token.setTokenURI("https://ipfs.io/ipfs/QmWiQE65tmpYzcokCheQmng2DCM33DEhjXcPB6PanwpAZo/10");
-            rabbitMQSender.send(token);
-            System.out.println("Sent message into rabbitmq");
-        }catch (Exception e){
-            System.out.println("exception while downloading file : " + e.getMessage());
-        }
-    }
 }
