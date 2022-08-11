@@ -12,6 +12,13 @@ Hence this product is built from ground up to just meet this requirement.
 It is near realtime. Utilized concurrency and it is very much extendable for all EVM chains.
 With some more modification it can also support non-evm chains.
 
+## Key features
+1. Extendable
+2. Support multiple chains (EVM and non-EVM)
+3. Near real-time data processing and storage
+4. Data consistency
+5. Fault-tolerant
+
 
 ## Architecture
 Here is the high level architecture.
@@ -19,6 +26,12 @@ Here is the high level architecture.
 
 ![Indexer Architecture Diagram](./indexer_architecture_diagram.jpg)
 
+## Key Components 
+### 
+Key components of this indexer architecture include : 
+1. Listener
+2. Metadata consumer
+3. API Service
 
 Documentation
 
