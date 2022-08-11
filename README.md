@@ -4,6 +4,8 @@
 ## About Project
 This project is built from scratch to meet all the requirements related to caching and query NFT Metadata.
 
+Slides of this project can be found [here](./EthSeoulSlides.pdf)
+
 ## Why this project?
 NFT are such an important use case in crypto and metadata gives you all the details about it. Query Metadata from IPFS can add lot of latency to your project hence it helps if there are tools for caching and querying it.
 
