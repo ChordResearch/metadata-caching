@@ -34,6 +34,17 @@ Key components of this indexer architecture include :
 2. [Metadata consumer](./metadata-consumer)
 3. [API Service](./apis/packages/api)
 
+
+Steps to run this project : 
+1. Run rabbitmq
+2. Run postgresdb
+3. Create a AWS S3 Bucket
+4. Set environment properties for API service
+5. Set environment properties for Listener
+6. Set environment properties for Metadata consumer
+7. [Run db migration script](./db)
+7. Start API service followed by listener and then meta data consumer
+
 Setup : 
 
 npm install knex -g
