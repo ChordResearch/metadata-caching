@@ -1,5 +1,3 @@
-# Lerna Project Template
-
 ## Install
 
 Clone the repository:
