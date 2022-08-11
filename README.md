@@ -66,6 +66,26 @@ You can use tools such as DBeaver or PGAdmin to connect and create database `eth
 docker run --name my-local-mongo-latest -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=rootpassword -p 27017:27017 -v <path to data folder>:/etc/mongo -d mongo
 `
 
+### Setup Knex 
+[Knex](https://knexjs.org/) is a tool to manage db migration and seed data.
+Seed files can be found [here](./db/)
+
+To configuration db credentials, you can update [knexfile](./db/knexfile.js)
+
+`
+npm install knex -g
+`
+
+## Install migration dependencies
+In ./db folder run :
+`yarn install`
+
+Create schema :
+`knex migrate:latest`
+
+Add seed data :
+`knex seed:run`
+
 ### Install 
 
 npm install knex -g
