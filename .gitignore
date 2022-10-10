@@ -23,3 +23,16 @@
 hs_err_pid*
 /**/**/application.properties*
 *.properties
+
+
+smart-contracts/node_modules
+.env
+**/**/.env
+**/**/coverage
+**/**/coverage.json
+**/**/typechain
+**/**/typechain-types
+
+#Hardhat files
+**/**/cache
+**/**/artifacts

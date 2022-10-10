@@ -117,3 +117,13 @@ mongo "mongodb://root:rootpassword@localhost:27017/FNS-DB?authSource=admin&readP
 
 cd packages/api
 yarn start:dev
+
+
+### Smart contract
+```
+npx hardhat compile
+npx hardhat run scripts/deployERC721.ts --network goerli
+npx hardhat run scripts/mint.ts --network goerli
+npx hardhat run scripts/getTokenURI.ts --network goerli
+```
+> Update smart-contarcts/.env file before you run the scripts.
