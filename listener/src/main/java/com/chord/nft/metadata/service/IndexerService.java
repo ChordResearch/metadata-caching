@@ -65,10 +65,11 @@ public class IndexerService {
         );
 
         BigInteger latestBlkInNw = new BigInteger(blockChainService.getCurrentNetworkBlock());
-        // System.out.println("Latest block in network : " + latestBlkInNw.toString());
+        System.out.println("Latest block in network : " + latestBlkInNw.toString());
 
         BigInteger currentBlkInDB = new BigInteger(global.getBlock() + ""); // long to string
         BigInteger nextBlockInDB = currentBlkInDB.add(new BigInteger("1"));
+        System.out.println("nextBlockInDB : " + nextBlockInDB.toString());
 
         /*
             Checking sync status is ON and next block to be synced is less than or equal to the latest block in network
@@ -90,10 +91,11 @@ public class IndexerService {
                    Hence indexer will sync fromBlock : 100, toBlock : 100
              */
             BigInteger toBlockWithFastSync = nextBlockInDB.add(new BigInteger((fastSyncBlockLength - 1) + ""));
+            System.out.println("toBlockWithFastSync : " + toBlockWithFastSync.toString());
             if (toBlockWithFastSync.compareTo(latestBlkInNw) <= 0) {
                 toBlock = toBlockWithFastSync;
             }
-
+            System.out.println("toBlock : " + toBlock.toString());
             // index blocks from given range
             doIndex(nextBlockInDB, toBlock, conn);
         }

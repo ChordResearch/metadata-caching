@@ -1,7 +1,5 @@
 
-create database ethseoul-db;
-
-CREATE TABLE public."global" (
+CREATE TABLE global (
 	id serial4 NOT NULL,
 	block int8 NOT NULL,
 	status bool NULL DEFAULT true,
@@ -10,7 +8,7 @@ CREATE TABLE public."global" (
 	CONSTRAINT global_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE public.nfts (
+CREATE TABLE nfts (
 	id serial4 NOT NULL,
 	"tokenAddress" varchar(255) NOT NULL,
 	"tokenId" varchar(255) NOT NULL,
@@ -23,3 +21,7 @@ CREATE TABLE public.nfts (
 	"updatedAt" timestamptz NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT nfts_pkey PRIMARY KEY ("tokenAddress", "tokenId")
 );
+
+INSERT INTO global
+(block, status)
+VALUES(7743360, false);

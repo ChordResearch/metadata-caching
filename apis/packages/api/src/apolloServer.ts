@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { connectToDatabase } from '@web3-metadata/commons/src/services/db.service';
+import { commons } from '@web3-metadata/commons';
 import { ApolloServer } from 'apollo-server';
 
 import { resolvers } from './graphql/resolvers.graphql';
@@ -21,7 +21,7 @@ export const createApolloServer = async (options = { port: 4000 }) => {
       return req;
     },
   });
-  await connectToDatabase(dbURL)
+  await commons.connectToDatabase(dbURL)
   const serverInfo = await server.listen(options);
 
   console.log(

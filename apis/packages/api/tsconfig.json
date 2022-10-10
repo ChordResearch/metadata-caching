@@ -21,7 +21,7 @@
     },
     "types": ["node","jest"]
   },
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/__tests__/*", "**/__e2e__/*"],
   "references": [
     {"path": "../commons"}

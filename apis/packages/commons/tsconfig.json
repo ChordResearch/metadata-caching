@@ -14,6 +14,6 @@
     "noEmit": false,
     "composite": true
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/__tests__/*", "**/__e2e__/*"]
 }
