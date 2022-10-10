@@ -1,0 +1,13 @@
+**/tsconfig.tsbuildinfo
+.env
+**/.env
+**/.env*
+yarn.lock
+**/yarn.lock
+dist
+/**/dist
+dist/*
+/**/dist/*
+.dockerignore
+node_modules
+**/node_modules
