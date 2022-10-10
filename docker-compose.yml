@@ -9,10 +9,10 @@ services:
       environment:
           - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
           - spring.rabbitmq.host=rabbit-mq
-          - network.url=
+          - network.url=${NETWORK_URL}
           - AWS_S3_BUCKET=ethseoulnft
-          - AWS_S3_ACCESS_KEY=
-          - AWS_S3_SECRET_KEY=
+          - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+          - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
           - DB_CONNECTION_URL=mongodb://root:rootpassword@mongo-db:27017/ethseoul-db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
       ports:
           - 5001:5001
@@ -25,7 +25,7 @@ services:
           - app.run=true
           - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
           - spring.rabbitmq.host=rabbit-mq
-          - network.url=https://eth-goerli.blastapi.io/a9aed783-979a-461d-b2d6-0799b73a5e57
+          - network.url=${NETWORK_URL}
     consumer:
       build: ./metadata-consumer 
       depends_on:
@@ -35,10 +35,10 @@ services:
       environment:
           - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
           - spring.rabbitmq.host=rabbit-mq
-          - network.url=
+          - network.url=${NETWORK_URL}
           - AWS_S3_BUCKET=ethseoulnft
-          - AWS_S3_ACCESS_KEY=
-          - AWS_S3_SECRET_KEY=
+          - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+          - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
           - spring.data.mongodb.uri=mongodb://root:rootpassword@mongo-db:27017/ethseoul-db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
     postgres-db:
       image: postgres
