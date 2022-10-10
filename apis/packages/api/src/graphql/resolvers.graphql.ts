@@ -45,9 +45,29 @@ export const resolvers = {
                     filter.tokenId = input.filter.tokenId
                 }
 
+                let offset: number = 0;
+                let limit: number = 10;
+                console.log(`input : ${JSON.stringify(input)}`)
+                if (input && input.filter &&
+                    input.filter.offset != undefined &&
+                    input.filter.offset != null &&
+                    input.filter.offset > 0
+                ) {
+                    offset = input.filter.offset
+                }
+
+                if (input &&
+                    input.filter &&
+                    input.filter.limit != undefined &&
+                    input.filter.limit != null &&
+                    input.filter.limit > 0
+                ) {
+                    limit = input.filter.limit
+                }
+
                 return {
                     __typename: 'Metadatas',
-                    data: await Metadata.find(filter)
+                    data: await Metadata.find(filter).skip(offset).limit(limit)
                 }
             } catch (error) {
                 console.log(`error : ${error}`)

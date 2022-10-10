@@ -44,6 +44,8 @@ export const typeDefs = gql`
   input MetadataFilter {
     address: String
     tokenId: String
+    offset: Int
+    limit: Int
   }
 
   type Query {
