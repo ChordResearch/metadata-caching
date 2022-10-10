@@ -1,6 +1,5 @@
 package com.chord.nft.metadata;
 
-import com.chord.nft.metadata.message.RabbitMQSender;
 import com.chord.nft.metadata.service.IndexerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +26,6 @@ public class AppRunner {
 
     @Autowired
     IndexerService indexerService;
-
-    @Autowired
-    RabbitMQSender rabbitMQSender;
 
     public void run() {
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword)) {

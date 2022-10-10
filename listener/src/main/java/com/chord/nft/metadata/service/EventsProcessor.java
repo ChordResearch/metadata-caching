@@ -1,9 +1,9 @@
 package com.chord.nft.metadata.service;
 
+import com.chord.nft.metadata.dto.EventLog;
 import com.chord.nft.metadata.dto.EventParseResult;
 import com.chord.nft.metadata.event.factory.EventHandlerFactory;
 import com.chord.nft.metadata.event.handler.EventHandler;
-import org.json.JSONObject;
 import org.web3j.protocol.Web3j;
 
 import java.sql.Connection;
@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 
 public class EventsProcessor implements Callable<EventParseResult> {
-    private JSONObject event;
+    private EventLog event;
     private CountDownLatch latch;
 
     private Web3j web3j;
@@ -19,7 +19,7 @@ public class EventsProcessor implements Callable<EventParseResult> {
 
     private Connection connection;
 
-    public EventsProcessor(JSONObject event, CountDownLatch latch, EventHandlerFactory eventsHandlerFactory, Web3j web3j, Connection connection) {
+    public EventsProcessor(EventLog event, CountDownLatch latch, EventHandlerFactory eventsHandlerFactory, Web3j web3j, Connection connection) {
         this.latch = latch;
         this.event = event;
         this.eventsHandlerFactory = eventsHandlerFactory;

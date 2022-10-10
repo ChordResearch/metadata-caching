@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-@Service
+//@Service
 public class GraphqlHttpService {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     public static final OkHttpClient client = new OkHttpClient();
 
-    @Value("${core.api}")
+   // @Value("${core.api}")
     private String coreAPIURL;
 
     public String post(String query, String variables) throws Exception {

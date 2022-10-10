@@ -1,11 +1,9 @@
 package com.chord.nft.metadata.service;
 
-import com.chord.nft.metadata.dto.EventFilter;
+import com.chord.nft.metadata.dto.EventLog;
 import com.chord.nft.metadata.dto.EventParseResult;
 import com.chord.nft.metadata.entity.Global;
 import com.chord.nft.metadata.event.factory.EventHandlerFactory;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,9 +31,9 @@ public class IndexerService {
     @Value("${network.url}")
     private String networkURL;
 
-    @Value("${TRANSFER_EVENT_TOPIC}")
-    private String transferTopic;
+    public static final String transferTopic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
+    String[] topics;
 
     @Autowired
     EventHandlerFactory eventsHandlerFactory;
@@ -49,6 +47,7 @@ public class IndexerService {
 
     @PostConstruct
     private void initialize() {
+        topics = new String[]{transferTopic};
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
         web3j = Web3j.build(new HttpService(networkURL));
 
@@ -103,21 +102,17 @@ public class IndexerService {
     private void doIndex(BigInteger fromBlock, BigInteger toBlock, Connection conn) throws Exception {
         System.out.println("Index from " + fromBlock.toString() + " , to : " + toBlock.toString());
         String address[] = {};
-        String topic[] = {
-                transferTopic,
-        };
-        String topics[][] = {topic};
-        EventFilter filter = new EventFilter(address, fromBlock.toString(), toBlock.toString(), topics);
-        JSONArray events = blockChainService.getEvents(filter);
 
-        System.out.println("events length : " + events.length());
-        if (events.length() > 0) {
+        List<EventLog> events = blockChainService.getEventLogs(fromBlock.toString(),toBlock.toString(),new ArrayList<>(),topics);
+
+        System.out.println("events length : " + events.size());
+        if (events.size() > 0) {
             // process events
-            CountDownLatch latch = new CountDownLatch(events.length());
+            CountDownLatch latch = new CountDownLatch(events.size());
             List<Callable<EventParseResult>> callables = new ArrayList<>();
 
-            for (int index = 0; index < events.length(); index++) {
-                JSONObject event = events.getJSONObject(index);
+            for (int index = 0; index < events.size(); index++) {
+                EventLog event = events.get(index);
                 // Adding into collection to process in Thread Pool
                 callables.add(new EventsProcessor(event, latch, eventsHandlerFactory, web3j,conn));
             }

@@ -1,22 +1,22 @@
 package com.chord.nft.metadata.service;
 
 
-import com.chord.nft.metadata.constant.Graphql;
-import com.chord.nft.metadata.dto.EventFilter;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.chord.nft.metadata.dto.EventLog;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.Response;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.EthLog;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +28,6 @@ public class BlockchainService {
     private String nodeURL;
 
     private static Web3j web3j;
-
-    @Autowired
-    GraphqlHttpService graphqlHttpService;
 
     public Web3j getWeb3j() {
         if (web3j == null) {
@@ -89,35 +86,28 @@ public class BlockchainService {
     }
 
 
-    public JSONArray getEvents(EventFilter filter) throws Exception {
-        JSONObject eventFilterJson = new JSONObject();
-        if (filter.getAddress().length > 0) {
-            eventFilterJson.put("address", filter.getAddress());
+    public List<EventLog> getEventLogs(String fromBlock, String toBlock, List<String> addresses, String[] topics) throws Exception {
+        EthFilter filter = new EthFilter(new org.web3j.protocol.core.DefaultBlockParameterNumber(new BigInteger(fromBlock)), new org.web3j.protocol.core.DefaultBlockParameterNumber(new BigInteger(toBlock)), addresses);
+        filter.addOptionalTopics(topics);
+
+
+        Response<List<EthLog.LogResult>> response = web3j.ethGetLogs(filter).send();
+        List<EthLog.LogResult> result = response.getResult();
+
+        List<EventLog> eventLogs = new ArrayList<>();
+        for (EthLog.LogResult r : result) {
+            org.web3j.protocol.core.methods.response.Log log = (org.web3j.protocol.core.methods.response.Log) r.get();
+            EventLog eventLog = new EventLog();
+            eventLog.setAddress(log.getAddress());
+            eventLog.setBlockHash(log.getBlockHash());
+            eventLog.setBlockNumber(log.getBlockNumber().toString());
+            eventLog.setData(log.getData());
+            eventLog.setTopics(log.getTopics());
+            eventLog.setTransactionHash(log.getTransactionHash());
+            eventLog.setLogIndex(log.getLogIndex().toString());
+            eventLogs.add(eventLog);
         }
-        if (filter.getFromBlock() != null && filter.getToBlock() != null) {
-            eventFilterJson.put("fromBlock", filter.getFromBlock());
-            eventFilterJson.put("toBlock", filter.getToBlock());
-        }
-        if (filter.getTopics() != null && filter.getTopics().length > 0) {
-            eventFilterJson.put("topics", filter.getTopics());
-        }
-
-        JSONObject variablesJson = new JSONObject();
-        variablesJson.put("eventFilter", eventFilterJson);
-
-        String responseData = graphqlHttpService.post(Graphql.GET_EVENTS_QUERY, variablesJson.toString());
-
-        JSONObject jsonResultObj = new JSONObject(responseData);
-        JSONObject getEventJsonObj = new JSONObject(new JSONObject(jsonResultObj.get("data").toString()).get("GetEvents").toString());
-
-        // data not found or error returned from core-api server
-        if (getEventJsonObj.has("error") || !getEventJsonObj.has("data")) {
-            String error = getEventJsonObj.get("error").toString();
-            System.out.println("Error query for events from core-api: " + error);
-            throw new Exception("Error querying events");
-        }
-
-        return new JSONArray(getEventJsonObj.get("data").toString());
+        return eventLogs;
     }
 }
 

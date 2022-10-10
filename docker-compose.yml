@@ -1,0 +1,45 @@
+version: '2'
+services:
+    listener:
+      image: chord/listener:latest
+      depends_on:
+          - postgres-db
+          - mongo-db
+          - rabbit-mq
+      environment:
+          - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseoul-db
+          - spring.rabbitmq.host=rabbit-mq
+          - network.url=https://rpc.com
+    postgres-db:
+      container_name: sample_postgres_db
+      image: postgres
+      restart: always
+      volumes:
+          - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      environment:
+          - POSTGRES_PASSWORD=rootpassword
+          - POSTGRES_USER=root
+          - POSTGRES_DB=ethseoul-db
+      ports:
+          - 5432:5432
+    mongo-db:
+      container_name: sample_mongo_db
+      image: mongo
+      environment:
+          - MONGO_INITDB_ROOT_USERNAME=root
+          - MONGO_INITDB_ROOT_USERNAME=MONGO_INITDB_ROOT_PASSWORD
+      ports:
+          - 27017:27017
+    rabbit-mq:
+      container_name: sample_rabbit_mq
+      image: rabbitmq:3.10-management
+      environment:
+          - RABBITMQ_DEFAULT_USER=guest
+          - RABBITMQ_DEFAULT_PASS=guest
+      ports:
+          - 5672:5672
+          - 15672:15672
+          - 8080:8080
+
+volumes:
+    sample_db: {}
