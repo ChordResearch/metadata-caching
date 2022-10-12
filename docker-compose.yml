@@ -27,7 +27,52 @@ services:
           - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
           - spring.rabbitmq.host=rabbit-mq
           - network.url=${NETWORK_URL}
-    consumer:
+    consumer1:
+      build: ./metadata-consumer 
+      depends_on:
+          - postgres-db
+          - mongo-db
+          - rabbit-mq
+      environment:
+          - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
+          - spring.rabbitmq.host=rabbit-mq
+          - network.url=${NETWORK_URL}
+          - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+          - AWS_S3_REGION=${AWS_S3_REGION}
+          - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+          - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
+          - spring.data.mongodb.uri=mongodb://root:rootpassword@mongo-db:27017/ethseoul-db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+    consumer2:
+      build: ./metadata-consumer 
+      depends_on:
+          - postgres-db
+          - mongo-db
+          - rabbit-mq
+      environment:
+          - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
+          - spring.rabbitmq.host=rabbit-mq
+          - network.url=${NETWORK_URL}
+          - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+          - AWS_S3_REGION=${AWS_S3_REGION}
+          - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+          - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
+          - spring.data.mongodb.uri=mongodb://root:rootpassword@mongo-db:27017/ethseoul-db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+    consumer3:
+      build: ./metadata-consumer 
+      depends_on:
+          - postgres-db
+          - mongo-db
+          - rabbit-mq
+      environment:
+          - spring.datasource.url=jdbc:postgresql://postgres-db:5432/ethseouldb
+          - spring.rabbitmq.host=rabbit-mq
+          - network.url=${NETWORK_URL}
+          - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+          - AWS_S3_REGION=${AWS_S3_REGION}
+          - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+          - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
+          - spring.data.mongodb.uri=mongodb://root:rootpassword@mongo-db:27017/ethseoul-db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+    consumer4:
       build: ./metadata-consumer 
       depends_on:
           - postgres-db
