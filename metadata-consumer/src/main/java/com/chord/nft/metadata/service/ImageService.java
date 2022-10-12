@@ -71,7 +71,11 @@ public class ImageService {
         try {
             InputStream in = url.openStream();
             while (in == null && retries > 0) {
-                in = url.openStream();
+                try {
+                    in = url.openStream();
+                }catch (Exception e){
+                    // ignore if exception
+                }
                 retries--;
             }
             ReadableByteChannel rbc = Channels.newChannel(in);
@@ -91,7 +95,11 @@ public class ImageService {
         try {
             System.out.println("token uri inside getMetadataFromTokenURI : " + tokenURI);
             while (is == null && retries > 0) {
-                is = new URL(tokenURI).openStream();
+                try {
+                    is = new URL(tokenURI).openStream();
+                }catch (Exception e){
+                    // ignore if exception
+                }
                 retries--;
             }
 
@@ -120,7 +128,7 @@ public class ImageService {
 
     public String downloadImageAndUploadToCDN(String fileURL) throws Exception {
         if(fileURL.isEmpty()) return "";
-        
+
         String file = this.download(fileURL);
         System.out.println("downloaded image : " + file);
         String imageURL = this.upload(file);
