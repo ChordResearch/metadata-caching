@@ -12,7 +12,7 @@ CREATE TABLE nfts (
 	id serial4 NOT NULL,
 	"tokenAddress" varchar(255) NOT NULL,
 	"tokenId" varchar(255) NOT NULL,
-	"tokenURI" varchar(50000) NULL,
+	"tokenURI" varchar(500000) NULL,
 	"minterAddress" varchar(255) NOT NULL,
 	"blockNumber" int8 NOT NULL,
 	"transactionHash" varchar(255) NOT NULL,

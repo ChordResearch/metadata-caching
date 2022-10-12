@@ -22,12 +22,13 @@ import java.util.UUID;
 public class ImageService {
     AmazonS3 s3client;
 
-    //String bucketName = "ethseoulnft";
-
     String s3BucketURL = "https://ethseoulnft.s3.ap-southeast-1.amazonaws.com";
 
     @Value("${AWS_S3_BUCKET}")
     String bucketName;
+
+    @Value("${AWS_S3_REGION}")
+    String s3BucketRegion;
 
     @Value("${AWS_S3_ACCESS_KEY}")
     String s3AccessKey;
@@ -47,6 +48,7 @@ public class ImageService {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
+        s3BucketURL = "https://" + bucketName + ".s3." + s3BucketRegion + ".amazonaws.com";
     }
 
 
