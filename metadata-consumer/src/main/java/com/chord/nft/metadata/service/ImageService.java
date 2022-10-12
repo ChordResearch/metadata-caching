@@ -101,6 +101,20 @@ public class ImageService {
         return sb.toString();
     }
 
+    public String downloadImageAndUploadToCDN(String fileURL) throws Exception{
+        String file = this.download(fileURL);
+        System.out.println("downloaded image : " + file);
+        String imageURL =  this.upload(file);
+
+        //clear file
+        java.io.File fileToDelete = new File(file);
+        if(fileToDelete.exists()){
+            fileToDelete.delete();
+        }
+
+        return imageURL;
+    }
+
     private String formatIpfsURL(String url) {
         return url.replaceAll("ipfs://","https://ipfs.io/ipfs/");
     }

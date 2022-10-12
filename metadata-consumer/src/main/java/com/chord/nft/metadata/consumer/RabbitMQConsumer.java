@@ -25,11 +25,6 @@ public class RabbitMQConsumer {
         return url.replaceAll("ipfs://", "https://ipfs.io/ipfs/");
     }
 
-    private String downloadImageAndUploadToCDN(String fileURL) throws Exception{
-        String file = imageService.download(fileURL);
-        System.out.println("downloaded image : " + file);
-        return imageService.upload(file);
-    }
 
     @RabbitListener(queues = "${rabbitmq.queue}")
     public void receivedMessage(Token token) {
@@ -50,7 +45,7 @@ public class RabbitMQConsumer {
                     if(imageIPFSURL.startsWith("ipfs://") || imageIPFSURL.startsWith("https://")){
                         imageIPFSURL = formatIpfsURL(imageIPFSURL);
 
-                        imageCDNPath = downloadImageAndUploadToCDN(formatIpfsURL(imageIPFSURL));
+                        imageCDNPath = imageService.downloadImageAndUploadToCDN(formatIpfsURL(imageIPFSURL));
                         System.out.println("image path in CDN " + imageCDNPath);
                     }else{
                         imageCDNPath = imageIPFSURL;
@@ -66,7 +61,7 @@ public class RabbitMQConsumer {
 
                if( image != null){
                    if((image.startsWith("ipfs://") || image.startsWith("https://"))){
-                       imageCDNPath = downloadImageAndUploadToCDN(formatIpfsURL(image));
+                       imageCDNPath = imageService.downloadImageAndUploadToCDN(formatIpfsURL(image));
                    }else if(image.startsWith("data:application/json;base64,")){
                        imageCDNPath = image;
                    }
