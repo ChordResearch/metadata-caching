@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ImageService {
     AmazonS3 s3client;
 
-    String s3BucketURL = "https://ethseoulnft.s3.ap-southeast-1.amazonaws.com";
+    String s3BucketURL = "";
 
     @Value("${AWS_S3_BUCKET}")
     String bucketName;
@@ -46,7 +46,7 @@ public class ImageService {
         s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(Regions.AP_SOUTHEAST_1)
+                .withRegion(Regions.fromName(s3BucketRegion))
                 .build();
         s3BucketURL = "https://" + bucketName + ".s3." + s3BucketRegion + ".amazonaws.com";
     }
@@ -80,14 +80,24 @@ public class ImageService {
     public JSONObject getMetadataFromTokenURI(String tokenURI) throws Exception{
         JSONObject metadata = new JSONObject();
         InputStream is = null;
+        int retries = 10;
         try {
             System.out.println("token uri inside getMetadataFromTokenURI : " + tokenURI);
-            is = new URL(tokenURI).openStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            metadata = new JSONObject(jsonText);
-        } finally {
-            is.close();
+            while(is == null && retries > 0){
+                is = new URL(tokenURI).openStream();
+                retries--;
+            }
+
+            if(is != null){
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                metadata = new JSONObject(jsonText);
+            }
+        }catch (Exception e){
+            System.out.println("Exception while fetching data from token uri : " + e.getMessage() + " , cause : " + e.getCause());
+        }finally {
+            if(is != null)
+                is.close();
             return metadata;
         }
     }
