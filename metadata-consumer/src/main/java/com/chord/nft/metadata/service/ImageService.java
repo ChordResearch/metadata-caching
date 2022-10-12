@@ -54,55 +54,62 @@ public class ImageService {
 
     public String upload(String filesToUpload) {
         String[] urlParts = filesToUpload.split("/");
-        String outputFileName = urlParts[urlParts.length-1];
+        String outputFileName = urlParts[urlParts.length - 1];
         s3client.putObject(
                 bucketName,
-                "images/"+outputFileName,
+                "images/" + outputFileName,
                 new File(filesToUpload)
         );
         return s3BucketURL + "/images/" + outputFileName;
     }
 
-    public  String download(String fileUrl) throws Exception
-    {
+    public String download(String fileUrl) throws Exception {
         URL url = new URL(fileUrl);
-        String outputFileName = UUID.randomUUID().toString()+".jpg"; //just assign some random file name
+        String outputFileName = UUID.randomUUID().toString() + ".jpg"; //just assign some random file name
         String outputFilePath = "/tmp/";
-        try (InputStream in = url.openStream();
-             ReadableByteChannel rbc = Channels.newChannel(in);
-             FileOutputStream fos = new FileOutputStream(outputFilePath + outputFileName)) {
+        int retries = 10;
+        try {
+            InputStream in = url.openStream();
+            while (in == null && retries > 0) {
+                in = url.openStream();
+                retries--;
+            }
+            ReadableByteChannel rbc = Channels.newChannel(in);
+            FileOutputStream fos = new FileOutputStream(outputFilePath + outputFileName);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            return outputFilePath + outputFileName;
+        } catch (Exception e) {
+            return "";
         }
-        return outputFilePath + outputFileName;
     }
 
 
-    public JSONObject getMetadataFromTokenURI(String tokenURI) throws Exception{
+    public JSONObject getMetadataFromTokenURI(String tokenURI) throws Exception {
         JSONObject metadata = new JSONObject();
         InputStream is = null;
         int retries = 10;
         try {
             System.out.println("token uri inside getMetadataFromTokenURI : " + tokenURI);
-            while(is == null && retries > 0){
+            while (is == null && retries > 0) {
                 is = new URL(tokenURI).openStream();
                 retries--;
             }
 
-            if(is != null){
+            if (is != null) {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
                 String jsonText = readAll(rd);
                 metadata = new JSONObject(jsonText);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Exception while fetching data from token uri : " + e.getMessage() + " , cause : " + e.getCause());
-        }finally {
-            if(is != null)
+        } finally {
+            if (is != null)
                 is.close();
             return metadata;
         }
     }
 
-    private  String readAll(Reader rd) throws IOException {
+    private String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = rd.read()) != -1) {
@@ -111,14 +118,16 @@ public class ImageService {
         return sb.toString();
     }
 
-    public String downloadImageAndUploadToCDN(String fileURL) throws Exception{
+    public String downloadImageAndUploadToCDN(String fileURL) throws Exception {
+        if(fileURL.isEmpty()) return "";
+        
         String file = this.download(fileURL);
         System.out.println("downloaded image : " + file);
-        String imageURL =  this.upload(file);
+        String imageURL = this.upload(file);
 
         //clear file
         java.io.File fileToDelete = new File(file);
-        if(fileToDelete.exists()){
+        if (fileToDelete.exists()) {
             fileToDelete.delete();
         }
 
@@ -126,7 +135,7 @@ public class ImageService {
     }
 
     private String formatIpfsURL(String url) {
-        return url.replaceAll("ipfs://","https://ipfs.io/ipfs/");
+        return url.replaceAll("ipfs://", "https://ipfs.io/ipfs/");
     }
 }
 
