@@ -15,4 +15,19 @@ public class NFT {
     private String transactionHash;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    @Override
+    public String toString() {
+        return "NFT{" +
+                "id=" + id +
+                ", tokenAddress='" + tokenAddress + '\'' +
+                ", minterAddress='" + minterAddress + '\'' +
+                ", tokenId='" + tokenId + '\'' +
+                ", tokenURI='" + tokenURI + '\'' +
+                ", blockNumber=" + blockNumber +
+                ", transactionHash='" + transactionHash + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

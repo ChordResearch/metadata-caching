@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import java.sql.Connection;
 
 @Data
-public class TransferEvent implements Event{
+public class TransferEvent implements Event {
     private TransferEventParam param;
 
     @Override
@@ -23,22 +23,30 @@ public class TransferEvent implements Event{
         nft.setTokenAddress(param.getTokenAddress());
         nft.setTokenId(param.getTokenId());
 
-        if(param.getTo().equals(AppConstants.ZERO_ADDRESS)){
-            repositoryService.getNftRepository().delete(connection,nft);
+        if (param.getTo().equals(AppConstants.ZERO_ADDRESS)) {
+            repositoryService.getNftRepository().delete(connection, nft);
         } else {
             EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(new BigInteger(param.getBlockNumber())), false).send();
             long timestamp = block.getBlock().getTimestamp().longValue() * 1000;
             java.sql.Timestamp blockTimestamp = new java.sql.Timestamp(timestamp);
-
             nft.setMinterAddress(param.getMintedBy());
-            nft.setTokenURI(param.getTokenURI());
+
+
+            String tokenURI = param.getTokenURI();
+
+            // replacing non-utf8 invalid chars
+            if (tokenURI != null)
+                tokenURI = tokenURI.replace("\u0000", "");
+
+            nft.setTokenURI(tokenURI);
             nft.setBlockNumber(Long.parseLong(param.getBlockNumber()));
             nft.setTransactionHash(param.getTransactionHash());
             nft.setCreatedAt(blockTimestamp);
             nft.setUpdatedAt(blockTimestamp);
 
             // Save newly minted token details
-            repositoryService.getNftRepository().save(connection,nft);
+            System.out.println("Saving NFT : " + nft);
+            repositoryService.getNftRepository().save(connection, nft);
             System.out.println("NFT details saved");
 
             // Publish to MQ for processing of metadata by consumer
