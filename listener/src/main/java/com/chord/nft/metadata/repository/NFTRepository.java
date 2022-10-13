@@ -29,4 +29,14 @@ public class NFTRepository extends Repository {
                         nft.getUpdatedAt()
                 });
     }
+
+    public int delete(Connection connection, NFT nft) {
+        return getJdbcTemplate(connection).update("delete from nfts where " +
+                        "\"tokenAddress\" = ? and " +
+                        "\"tokenId\" = ?",
+                new Object[]{
+                        nft.getTokenAddress(),
+                        nft.getTokenId()
+                });
+    }
 }

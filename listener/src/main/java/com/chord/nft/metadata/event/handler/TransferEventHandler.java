@@ -7,7 +7,7 @@ import com.chord.nft.metadata.dto.EventParseResult;
 import com.chord.nft.metadata.event.TransferEvent;
 import com.chord.nft.metadata.event.param.TransferEventParam;
 import com.chord.nft.metadata.exception.InvalidTokenException;
-import com.chord.nft.metadata.exception.NotMintEventException;
+import com.chord.nft.metadata.exception.NotMintOrBurnEventException;
 import com.chord.nft.metadata.service.BlockchainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,10 +32,16 @@ public class TransferEventHandler implements EventHandler {
 
         Address from = (Address) FunctionReturnDecoder.decodeIndexedValue(fromTopic, new TypeReference<Address>(true) {
         });
+        Address to = (Address) FunctionReturnDecoder.decodeIndexedValue(toTopic, new TypeReference<Address>(true) {
+        });
         String fromAddress = from.getValue().toString().toLowerCase();
+        String toAddress = to.getValue().toString().toLowerCase();
 
-        if(!fromAddress.equals(AppConstants.ZERO_ADDRESS)) {
-            throw new NotMintEventException("Token is not minted");
+        if(!(fromAddress.equals(AppConstants.ZERO_ADDRESS) ||
+                toAddress.equals(AppConstants.ZERO_ADDRESS)
+            )
+        ) {
+            throw new NotMintOrBurnEventException("Token is not minted or Burned");
         }
 
         String tokenIdStr = null; // erc721 stores tokenId
@@ -55,13 +61,12 @@ public class TransferEventHandler implements EventHandler {
         Transaction transaction = blockchainService.getTransactionByHash(transactionHash);
         String transactionFrom = transaction.getFrom().toLowerCase();
 
-        Address to = (Address) FunctionReturnDecoder.decodeIndexedValue(toTopic, new TypeReference<Address>(true) {
-        });
+
 
         TransferEventParam transferEventParam = new TransferEventParam(
                 blockNumber,
                 fromAddress,
-                to.getValue().toString().toLowerCase(),
+                toAddress,
                 tokenIdStr,
                 tokenAddress,
                 transactionFrom,
