@@ -38,12 +38,23 @@ public class BlockchainService {
     }
 
     public String getCurrentNetworkBlock() throws Exception {
-        return this.getWeb3j()
-                .ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false)
-                .send()
-                .getBlock()
-                .getNumber()
-                .toString();
+        int reties = 10;
+        String result = null;
+        while(result == null && reties > 0){
+            try {
+                result = this.getWeb3j()
+                        .ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false)
+                        .send()
+                        .getBlock()
+                        .getNumber()
+                        .toString();
+            }catch (Exception e){
+                // do nothing
+            }
+            reties--;
+        }
+
+        return  result;
     }
 
     public Date getBlockTimestamp(String blockNumber) throws Exception {
