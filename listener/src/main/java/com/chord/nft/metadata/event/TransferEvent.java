@@ -26,16 +26,16 @@ public class TransferEvent implements Event {
         if (param.getTo().equals(AppConstants.ZERO_ADDRESS)) {
             repositoryService.getNftRepository().delete(connection, nft);
         } else {
-            int retry = 10;
+            int retries = 10;
 
             EthBlock block = null;
-            while(retry>0 && block == null) {
+            while(retries>0 && block == null) {
                 try {
                     block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(new BigInteger(param.getBlockNumber())), false).send();
                 }catch (Exception e){
                     // do nothing
                 }
-                retry--;
+                retries--;
             }
             long timestamp = block.getBlock().getTimestamp().longValue() * 1000;
             java.sql.Timestamp blockTimestamp = new java.sql.Timestamp(timestamp);

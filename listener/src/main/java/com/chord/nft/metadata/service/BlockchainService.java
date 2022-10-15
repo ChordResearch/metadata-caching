@@ -38,9 +38,9 @@ public class BlockchainService {
     }
 
     public String getCurrentNetworkBlock() throws Exception {
-        int reties = 10;
+        int retries = 10;
         String result = null;
-        while(result == null && reties > 0){
+        while(result == null && retries > 0){
             try {
                 result = this.getWeb3j()
                         .ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false)
@@ -51,7 +51,7 @@ public class BlockchainService {
             }catch (Exception e){
                 // do nothing
             }
-            reties--;
+            retries--;
         }
 
         return  result;
@@ -84,7 +84,16 @@ public class BlockchainService {
     }
 
     public Transaction getTransactionByHash(String txHash) throws Exception {
-        Optional<Transaction> txOptional = this.getWeb3j().ethGetTransactionByHash(txHash).send().getTransaction();
+        Optional<Transaction> txOptional = null;
+        int retries = 10;
+        while(retries > 0 && txOptional == null){
+            try{
+                txOptional = this.getWeb3j().ethGetTransactionByHash(txHash).send().getTransaction();
+            }catch (Exception e){
+                // do nothing
+            }
+            retries--;
+        }
 
         if (txOptional.isPresent()) {
             return txOptional.get();
@@ -102,7 +111,18 @@ public class BlockchainService {
         filter.addOptionalTopics(topics);
 
 
-        Response<List<EthLog.LogResult>> response = web3j.ethGetLogs(filter).send();
+        Response<List<EthLog.LogResult>> response = null;
+        int retries = 10;
+        while(retries > 0 && response == null){
+            try{
+                response = web3j.ethGetLogs(filter).send();
+            }catch (Exception e){
+                // do nothing
+            }
+            retries--;
+        }
+
+
         List<EthLog.LogResult> result = response.getResult();
 
         List<EventLog> eventLogs = new ArrayList<>();
